@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Swiper Styles */
+@import "swiper/css";
+@import "swiper/css/pagination";
+@import "swiper/css/navigation";
