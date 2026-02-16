@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 
 export default function ProductTabs() {
@@ -6,7 +6,6 @@ export default function ProductTabs() {
 
   return (
     <section className="mt-10 bg-white p-6 rounded-2xl">
-      
       {/* Tabs */}
       <div className="flex gap-6 border-b mb-6">
         <TabBtn
@@ -67,14 +66,17 @@ export default function ProductTabs() {
   );
 }
 
-function TabBtn({ active, children, ...props }) {
+type TabBtnProps = {
+  active: boolean;
+  children: React.ReactNode;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+function TabBtn({ active, children, ...props }: TabBtnProps) {
   return (
     <button
       {...props}
       className={`pb-3 font-medium ${
-        active
-          ? "text-green-600 border-b-2 border-green-600"
-          : "text-gray-500"
+        active ? "text-green-600 border-b-2 border-green-600" : "text-gray-500"
       }`}
     >
       {children}
