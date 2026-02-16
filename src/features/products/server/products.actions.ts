@@ -28,3 +28,20 @@ export async function getProductDetails({id}: {id: string}): Promise<singleProdu
         throw error;
     }
 }
+
+export async function searchProducts(query: string): Promise<ProductResponse> {
+    try {
+        const options: AxiosRequestConfig = {
+            url: "https://ecommerce.routemisr.com/api/v1/products",
+            method: "GET",
+            params: {
+                keyword: query,
+                limit: 10, // Limit results for search dropdown
+            },
+        };
+        const { data } = await axios.request(options);
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}

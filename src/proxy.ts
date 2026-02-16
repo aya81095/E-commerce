@@ -24,10 +24,17 @@ export function proxy(request: NextRequest) {
 
   if (isProtectedRoute && !isAuthenticated) {
     const loginUrl = new URL("/login", request.url);
+    // Preserve the original URL they were trying to access
+    loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   if (isAuthRoute && isAuthenticated) {
+    // Check if there's a redirect parameter - if so, allow the auth page to handle it
+    const redirectParam = request.nextUrl.searchParams.get("redirect");
+    if (redirectParam) {
+      return NextResponse.redirect(new URL(redirectParam, request.url));
+    }
     const homeUrl = new URL("/", request.url);
     return NextResponse.redirect(homeUrl);
   }

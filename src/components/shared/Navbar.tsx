@@ -23,6 +23,7 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { AppState, useAppSelector } from "../../store/store";
 import useLogout from "../../features/auth/hooks/useLogout";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -85,17 +86,8 @@ export default function Navbar() {
             </Link>
 
             {/* Search Bar - Hidden on small mobile, visible on md+ */}
-            <div className="hidden md:block flex-1 max-w-xl lg:max-w-2xl mx-4 lg:mx-8">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search for products..."
-                  className="w-full px-5 py-2 border border-gray-300 rounded-lg focus:outline-none focus:shadow-green-600 focus:ring-1 focus:ring-green-600 text-sm lg:text-base placeholder-gray-400"
-                />
-                <button className="absolute right-0 top-0 h-full px-4 text-white cursor-pointer bg-green-600 hover:bg-green-700 transition-colors border-l border-gray-300 rounded-r-lg">
-                  <FontAwesomeIcon icon={faSearch} />
-                </button>
-              </div>
+            <div className="hidden md:block">
+              <SearchBar />
             </div>
 
             {/* User Actions */}
@@ -267,15 +259,8 @@ export default function Navbar() {
                 </button>
               </div>
 
-              <div className="relative mb-6 md:hidden">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0aad0a] text-sm"
-                />
-                <button className="absolute right-0 top-0 h-full w-10 text-white bg-[#0aad0a] rounded-r-lg flex items-center justify-center">
-                  <FontAwesomeIcon icon={faSearch} />
-                </button>
+              <div className="mb-6 md:hidden\">
+                <SearchBar />
               </div>
 
               <div className="space-y-6 mb-8 md:border-t md:border-gray-100 md:py-4">

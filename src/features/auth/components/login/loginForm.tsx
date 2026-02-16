@@ -1,65 +1,85 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faEye, faEyeSlash, faLock, faSpinner, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { loginFormValues, loginSchema } from '../../schemas/login.schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import loginAction from '../../server/login.actions';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
-import { setToken } from '../../server/auth.actions';
-import { setAuthInfo } from '../../store/auth.slice';
-import { useDispatch } from 'react-redux';
+import { useState } from "react";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import {
+  faEnvelope,
+  faEye,
+  faEyeSlash,
+  faLock,
+  faSpinner,
+  faStar,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { loginFormValues, loginSchema } from "../../schemas/login.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import loginAction from "../../server/login.actions";
+import { toast } from "react-toastify";
+import { useRouter, useSearchParams } from "next/navigation";
+import { setToken } from "../../server/auth.actions";
+import { setAuthInfo } from "../../store/auth.slice";
+import { useDispatch } from "react-redux";
+
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/";
 
-  const {register, handleSubmit,setError, formState: {errors,isSubmitting,isDirty}} = useForm<loginFormValues>({
+  console.log("Login Form - Redirect URL:", redirectUrl);
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting, isDirty },
+  } = useForm<loginFormValues>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       rememberMe: false,
     },
 
     resolver: zodResolver(loginSchema),
     mode: "onSubmit",
     reValidateMode: "onChange",
-  })
+  });
 
   const onSubmit: SubmitHandler<loginFormValues> = async (values) => {
     try {
-        const response = await loginAction(values);
-        if(response.success){
-          console.log(response.data);
-          // set token
-          await setToken(response.data.token , values.rememberMe)
-          // set auth info
-          dispatch(setAuthInfo({isAuthenticated:true,userInfo:response.data.user}))
-          
-            toast.success(response?.message);
-            setTimeout(() => {
-                router.push("/")    
-            }, 2000)
-        }
-        else{
-            if(response?.errors){
-                Object.keys(response.errors).forEach((key) => {
-                   setError(key as keyof loginFormValues,{message:response.errors[key]})
-                });
-            }
-        }
-    } catch (error) {
-        console.log(error);
-      toast.error("Something went wrong");
-        
-    }
-  }
+      const response = await loginAction(values);
+      if (response.success) {
+        console.log(response.data);
+        // set token
+        await setToken(response.data.token, values.rememberMe);
+        // set auth info
+        dispatch(
+          setAuthInfo({ isAuthenticated: true, userInfo: response.data.user }),
+        );
 
+        toast.success(response?.message);
+        console.log("Login successful, redirecting to:", redirectUrl);
+        setTimeout(() => {
+          router.push(redirectUrl);
+        }, 2000);
+      } else {
+        if (response?.errors) {
+          Object.keys(response.errors).forEach((key) => {
+            setError(key as keyof loginFormValues, {
+              message: response.errors[key],
+            });
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <div className="bg-gray-50 flex items-center justify-center lg:justify-start lg:pl-10 p-6 lg:p-8">
@@ -70,7 +90,9 @@ export default function LoginForm() {
             <span className="text-green-600">Fresh</span>
             <span className="text-gray-900">Cart</span>
           </h1>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">Welcome Back!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">
+            Welcome Back!
+          </h2>
           <p className="text-gray-600 text-sm">
             Sign in to continue your fresh shopping experience
           </p>
@@ -83,14 +105,18 @@ export default function LoginForm() {
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm"
           >
             <FontAwesomeIcon icon={faGoogle} className="text-red-500" />
-            <span className="font-medium text-gray-700">Continue with Google</span>
+            <span className="font-medium text-gray-700">
+              Continue with Google
+            </span>
           </button>
           <button
             type="button"
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm"
           >
             <FontAwesomeIcon icon={faFacebook} className="text-blue-600" />
-            <span className="font-medium text-gray-700">Continue with Facebook</span>
+            <span className="font-medium text-gray-700">
+              Continue with Facebook
+            </span>
           </button>
         </div>
 
@@ -104,7 +130,10 @@ export default function LoginForm() {
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Email Address */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1.5">
+            <label
+              htmlFor="email"
+              className="block text-xs font-medium text-gray-700 mb-1.5"
+            >
               Email Address
             </label>
             <div className="relative">
@@ -119,12 +148,19 @@ export default function LoginForm() {
                 {...register("email")}
               />
             </div>
-            {errors.email && <p className="text-red-500 text-xs mt-1">*{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.email.message}
+              </p>
+            )}
           </div>
 
           {/* Password */}
           <div className="mb-3">
-            <label htmlFor="password" className="block text-xs font-medium text-gray-700 mb-1.5">
+            <label
+              htmlFor="password"
+              className="block text-xs font-medium text-gray-700 mb-1.5"
+            >
               Password
             </label>
             <div className="relative">
@@ -132,7 +168,7 @@ export default function LoginForm() {
                 <FontAwesomeIcon icon={faLock} className="text-sm" />
               </span>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder="Enter your password"
                 className="w-full pl-10 pr-10 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -143,10 +179,17 @@ export default function LoginForm() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm"
               >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="text-sm" />
+                <FontAwesomeIcon
+                  icon={showPassword ? faEyeSlash : faEye}
+                  className="text-sm"
+                />
               </button>
             </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1">*{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.password.message}
+              </p>
+            )}
           </div>
 
           {/* Keep me signed in & Forgot Password */}
@@ -159,7 +202,10 @@ export default function LoginForm() {
               />
               <span className="text-sm text-gray-600">Keep me signed in</span>
             </label>
-            <Link href="/forgot-password" className="text-sm text-green-600 hover:underline font-medium">
+            <Link
+              href="/forget-password"
+              className="text-sm text-green-600 hover:underline font-medium"
+            >
               Forgot Password?
             </Link>
           </div>
@@ -170,14 +216,24 @@ export default function LoginForm() {
             disabled={isSubmitting || !isDirty}
             className="w-full bg-green-600 text-white py-2.5 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? <><FontAwesomeIcon icon={faSpinner} className="animate-spin" /> Signing in...</>: "Sign In"}
+            {isSubmitting ? (
+              <>
+                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />{" "}
+                Signing in...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </button>
         </form>
 
         {/* Sign Up Link */}
         <p className="text-center text-gray-600 mt-5 text-sm">
-          New to FreshCart?{' '}
-          <Link href="/signup" className="text-green-600 font-semibold hover:underline">
+          New to FreshCart?{" "}
+          <Link
+            href="/signup"
+            className="text-green-600 font-semibold hover:underline"
+          >
             Create an account
           </Link>
         </p>
@@ -202,5 +258,4 @@ export default function LoginForm() {
       </div>
     </div>
   );
-};
-
+}
