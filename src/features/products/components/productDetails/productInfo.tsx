@@ -138,10 +138,10 @@ export default function ProductInfo({ product }: { product: Product }) {
   };
 
   return (
-    <section className="w-full grid grid-cols-1 md:flex gap-6 p-8 bg-white rounded-2xl">
+    <section className="w-full grid grid-cols-1 md:flex gap-4 md:gap-6 p-4 md:p-8 bg-white rounded-2xl">
       {/* Image Slider */}
-      <div className="py-5 max-w-1/4 w-full ">
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 sticky top-0">
+      <div className="py-2 md:py-5 w-full md:max-w-md">
+        <div className="bg-white border border-gray-200 rounded-2xl p-2 md:p-4 md:sticky md:top-20">
           <ImageGallery
             items={images.map((image) => {
               return {
@@ -157,13 +157,15 @@ export default function ProductInfo({ product }: { product: Product }) {
       </div>
 
       {/* Product Info */}
-      <div className="max-w-3/4 py-5 w-full ">
-        <div className="bg-white border border-gray-200 rounded-2xl p-4">
-          <span className="text-lg text-green-600 font-medium">
+      <div className="flex-1 py-2 md:py-5 w-full">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-6">
+          <span className="text-sm md:text-lg text-green-600 font-medium">
             {category.name} • {brand.name}
           </span>
 
-          <h1 className="text-2xl font-bold text-gray-900 mt-2">{title}</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+            {title}
+          </h1>
 
           {/* Rating */}
           <div className="flex items-center gap-1 mt-2">
@@ -184,14 +186,16 @@ export default function ProductInfo({ product }: { product: Product }) {
           </div>
 
           {/* Price */}
-          <div className="flex items-center gap-3 mt-4">
-            <span className="text-2xl font-bold text-gray-900">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 mt-4">
+            <span className="text-xl md:text-2xl font-bold text-gray-900">
               {priceAfterDiscount || price} EGP
             </span>
             {isSale && (
               <>
-                <span className="line-through text-gray-400">{price} EGP</span>
-                <span className="bg-red-500 text-white text-sm px-3 py-1 rounded-full">
+                <span className="line-through text-gray-400 text-sm md:text-base">
+                  {price} EGP
+                </span>
+                <span className="bg-red-500 text-white text-xs md:text-sm px-2 md:px-3 py-1 rounded-full">
                   Save {discountPercentage}%
                 </span>
               </>
@@ -209,7 +213,7 @@ export default function ProductInfo({ product }: { product: Product }) {
                 {isLowStock ? `Only ${quantity} left Order soon!` : `In Stock`}
               </span>
             ) : (
-              <span className="flex items-center gap-1.5 text-sm px-3 py-1.5 roundrd-full bg-red-50 text-red-700">
+              <span className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full bg-red-50 text-red-700">
                 <span className="w-2 h-2 rounded-full bg-red-500"></span>
                 Out Of Stock
               </span>
@@ -218,13 +222,13 @@ export default function ProductInfo({ product }: { product: Product }) {
 
           {/* description */}
           <div>
-            <p className="text-gray-700">{description}</p>
+            <p className="text-sm md:text-base text-gray-700">{description}</p>
           </div>
 
           {/* Quantity */}
           <div className="mt-6">
-            <p className="mb-2 text-lg font-medium">Quantity</p>
-            <div className="flex items-center gap-4">
+            <p className="mb-2 text-base md:text-lg font-medium">Quantity</p>
+            <div className="flex flex-wrap items-center gap-2 md:gap-4">
               <div className="flex items-center border border-gray-400 rounded-lg">
                 <button
                   className="px-3 py-2  cursor-pointer hover:text-red-500"
@@ -255,19 +259,21 @@ export default function ProductInfo({ product }: { product: Product }) {
             </div>
           </div>
 
-          <div className="totalPrice mt-6 flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-            <p className="text-lg font-medium text-gray-600">Total Price : </p>
-            <p className="text-2xl font-bold text-green-600">
+          <div className="totalPrice mt-6 flex flex-col sm:flex-row items-center justify-between bg-gray-50 p-4 rounded-lg gap-2">
+            <p className="text-base md:text-lg font-medium text-gray-600">
+              Total Price :{" "}
+            </p>
+            <p className="text-xl md:text-2xl font-bold text-green-600">
               {count * (priceAfterDiscount || price)} EGP
             </p>
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-4 mt-6 flex-col sm:flex-row">
+          <div className="flex gap-3 md:gap-4 mt-6 flex-col sm:flex-row">
             <button
               onClick={toggleCart}
               disabled={cartLoading}
-              className={`flex-1 text-white py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition ${isInCart ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}
+              className={`flex-1 text-white py-3 rounded-xl flex items-center justify-center gap-2 text-sm md:text-base disabled:opacity-60 disabled:cursor-not-allowed transition ${isInCart ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}
             >
               {cartLoading ? (
                 <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
@@ -278,7 +284,7 @@ export default function ProductInfo({ product }: { product: Product }) {
               )}
               {isInCart ? "Remove from Cart" : "Add to Cart"}
             </button>
-            <button className="flex-1 bg-gray-600 text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-700">
+            <button className="flex-1 bg-gray-600 text-white py-3 rounded-xl flex items-center justify-center gap-2 text-sm md:text-base hover:bg-gray-700">
               <FontAwesomeIcon icon={faBolt} />
               Buy Now
             </button>
@@ -287,7 +293,7 @@ export default function ProductInfo({ product }: { product: Product }) {
           <button
             disabled={wishLoading}
             onClick={toggleWishlist}
-            className="mt-4 flex items-center gap-2 text-gray-500 w-full border border-gray-200 rounded-lg py-3 hover:bg-gray-100 transition justify-center"
+            className="mt-4 flex items-center gap-2 text-gray-500 w-full border border-gray-200 rounded-lg py-3 text-sm md:text-base hover:bg-gray-100 transition justify-center"
           >
             {wishLoading ? (
               <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
@@ -301,44 +307,57 @@ export default function ProductInfo({ product }: { product: Product }) {
           </button>
 
           {/* delivery features */}
-          <div className="w-full bg-white mt-6 border-t border-gray-200 ">
-            <div className="flex flex-col md:flex-row items-center justify-between p-4 gap-6">
+          <div className="w-full bg-white mt-6 border-t border-gray-200">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 gap-4 md:gap-6">
               {/* Free Delivery */}
-              <div className="flex items-center gap-4">
-                <div className="bg-green-100 text-green-600 w-12 h-12 rounded-full flex items-center justify-center">
-                  <FontAwesomeIcon icon={faTruck} className="text-lg" />
+              <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
+                <div className="bg-green-100 text-green-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0">
+                  <FontAwesomeIcon
+                    icon={faTruck}
+                    className="text-base md:text-lg"
+                  />
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="text-gray-800 font-semibold text-lg">
+                  <h3 className="text-gray-800 font-semibold text-base md:text-lg">
                     Free Delivery
                   </h3>
-                  <p className="text-gray-500 text-sm">Orders over $50</p>
+                  <p className="text-gray-500 text-xs md:text-sm">
+                    Orders over $50
+                  </p>
                 </div>
               </div>
 
               {/* 30 Days Return */}
-              <div className="flex items-center gap-4">
-                <div className="bg-green-100 text-green-600 w-12 h-12 rounded-full flex items-center justify-center">
-                  <FontAwesomeIcon icon={faUndo} className="text-lg" />
+              <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
+                <div className="bg-green-100 text-green-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0">
+                  <FontAwesomeIcon
+                    icon={faUndo}
+                    className="text-base md:text-lg"
+                  />
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="text-gray-800 font-semibold text-lg">
+                  <h3 className="text-gray-800 font-semibold text-base md:text-lg">
                     30 Days Return
                   </h3>
-                  <p className="text-gray-500 text-sm">Money back</p>
+                  <p className="text-gray-500 text-xs md:text-sm">Money back</p>
                 </div>
               </div>
 
               {/* Secure Payment */}
-              <div className="flex items-center gap-4">
-                <div className="bg-green-100 text-green-600 w-12 h-12 rounded-full flex items-center justify-center">
-                  <FontAwesomeIcon icon={faShieldAlt} className="text-lg" />
+              <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
+                <div className="bg-green-100 text-green-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0">
+                  <FontAwesomeIcon
+                    icon={faShieldAlt}
+                    className="text-base md:text-lg"
+                  />
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="text-gray-800 font-semibold text-lg">
+                  <h3 className="text-gray-800 font-semibold text-base md:text-lg">
                     Secure Payment
                   </h3>
-                  <p className="text-gray-500 text-sm">100% Protected</p>
+                  <p className="text-gray-500 text-xs md:text-sm">
+                    100% Protected
+                  </p>
                 </div>
               </div>
             </div>
