@@ -18,3 +18,26 @@ export interface CategoryResponse {
   metadata: CategoryMetadata;
   data: Category[];
 }
+
+export interface SingleCategoryResponse {
+  data: Category;
+}
+
+export interface Subcategory {
+  _id: string;
+  name: string;
+  slug: string;
+  category: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SubcategoryResponse {
+  results: number;
+  metadata: CategoryMetadata;
+  data: Subcategory[];
+}
+
+export interface SingleSubcategoryResponse {
+  data: Subcategory;
+}

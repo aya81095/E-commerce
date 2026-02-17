@@ -11,7 +11,17 @@ import { WishlistState } from "../features/wishlist/store/wishlist.slice";
 // ^ fontawesome styles
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
+import { Exo_2 } from "next/font/google";
+
 config.autoAddCss = false;
+
+// Font optimization
+const exo = Exo_2({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-exo",
+});
 
 export const metadata = {
   viewport: "width=device-width, initial-scale=1",
@@ -74,8 +84,8 @@ export default async function RootLayout({
     }
   }
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={exo.variable}>
+      <body className={`${exo.className} antialiased`}>
         <Providers
           preloadedState={{
             auth: authValues,

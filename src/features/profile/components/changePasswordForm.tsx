@@ -113,8 +113,8 @@ export default function ChangePasswordForm() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 mt-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+    <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mt-6">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
         <FontAwesomeIcon icon={faKey} className="text-green-600" />
         Change Password
       </h2>
@@ -232,8 +232,8 @@ export default function ChangePasswordForm() {
         </div>
 
         {/* Password Requirements */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <p className="text-xs text-gray-600 font-semibold mb-2">
+        <div className="mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+          <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-2">
             Password must contain:
           </p>
           <ul className="text-xs text-gray-600 space-y-1">
@@ -249,7 +249,7 @@ export default function ChangePasswordForm() {
         <button
           type="submit"
           disabled={isSubmitting || !isDirty}
-          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-green-600 text-white py-3 px-4 sm:px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
         >
           {isSubmitting ? (
             <>

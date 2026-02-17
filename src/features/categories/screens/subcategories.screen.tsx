@@ -16,8 +16,8 @@ export default async function SubcategoriesScreen({
   return (
     <div className="">
       {/* Header */}
-      <div className="flex items-center gap-3 bg-green-600 w-full p-6">
-        <div className="text-white size-16 rounded-2xl bg-gray-50/20 border backdrop-blur-sm border-gray-50/20 shadow-md flex items-center justify-center overflow-hidden ">
+      <div className="flex items-center gap-2 md:gap-3 bg-green-600 w-full p-4 md:p-6">
+        <div className="text-white size-12 md:size-14 lg:size-16 rounded-xl md:rounded-2xl bg-gray-50/20 border backdrop-blur-sm border-gray-50/20 shadow-md flex items-center justify-center overflow-hidden shrink-0">
           <Image
             src={
               data.data.find((cat) => cat._id === categoryId)?.image ||
@@ -26,12 +26,12 @@ export default async function SubcategoriesScreen({
             alt="Subcategories Icon"
             width={96}
             height={96}
-            className="w-full h-full rounded-2xl object-cover"
+            className="w-full h-full rounded-xl md:rounded-2xl object-cover"
           />
         </div>
 
         <div>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white">
             {data.data.find((cat) => cat._id === categoryId)?.name ||
               "Category"}{" "}
             Subcategories
@@ -52,7 +52,7 @@ export default async function SubcategoriesScreen({
       >
         {response?.data.map((category) => (
           <Link
-            href={`/categories/${category._id}`}
+            href={`/subcategories/${category._id}`}
             key={category._id}
             className="
           group bg-white border border-gray-200 rounded-2xl p-6 
@@ -85,17 +85,6 @@ export default async function SubcategoriesScreen({
             >
               {category.name}
             </h3>
-            <div className="h-6 mt-2 flex items-center justify-center">
-              <span
-                className="
-              text-sm text-green-600 opacity-0 
-              transition-opacity duration-300 
-              group-hover:opacity-100
-            "
-              >
-                Browse Products →
-              </span>
-            </div>
           </Link>
         ))}
       </div>

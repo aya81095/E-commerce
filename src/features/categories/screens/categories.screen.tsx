@@ -13,13 +13,15 @@ export default async function CategoriesScreen() {
   return (
     <section className="">
       {/* Header */}
-      <div className="flex items-center gap-3 bg-green-600 w-full p-6">
-        <div className="text-white size-16 rounded-2xl bg-gray-50/20 border backdrop-blur-sm border-gray-50/20 shadow-md text-3xl flex items-center justify-center ">
+      <div className="flex items-center gap-2 md:gap-3 bg-green-600 w-full p-4 md:p-6">
+        <div className="text-white size-12 md:size-14 lg:size-16 rounded-xl md:rounded-2xl bg-gray-50/20 border backdrop-blur-sm border-gray-50/20 shadow-md text-xl md:text-2xl lg:text-3xl flex items-center justify-center">
           <FontAwesomeIcon icon={faLayerGroup} />
         </div>
 
         <div>
-          <h1 className="text-3xl font-bold text-white">All Categories</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white">
+            All Categories
+          </h1>
         </div>
       </div>
 

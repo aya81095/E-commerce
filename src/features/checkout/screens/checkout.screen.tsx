@@ -97,26 +97,27 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <div className="w-full mx-auto px-8 py-10">
-      <div className="flex items-center justify-between">
+    <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8 lg:py-10">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex flex-col">
-          <div className="text-2xl font-bold mb-1 flex items-center gap-2">
+          <div className="text-xl md:text-2xl lg:text-3xl font-bold mb-1 flex items-center gap-2">
             <FontAwesomeIcon
               icon={faCreditCard}
-              className="bg-green-600 p-2.5 text-2xl rounded-lg text-white"
+              className="bg-green-600 p-2 md:p-2.5 text-lg md:text-xl lg:text-2xl rounded-lg text-white"
             />
             <h1>Complete Your Order</h1>
           </div>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-xs md:text-sm text-gray-500 mb-4 sm:mb-6">
             Review your items and complete your purchase.
           </p>
         </div>
         <Link
           href="/cart"
-          className="text-green-600 font-semibold hover:gap-3 transition-all duration-300 flex items-center gap-2"
+          className="text-green-600 font-semibold hover:gap-3 transition-all duration-300 flex items-center gap-2 text-sm md:text-base whitespace-nowrap"
         >
           <FontAwesomeIcon icon={faArrowLeft} />
-          Back to Cart
+          <span className="hidden sm:inline">Back to Cart</span>
+          <span className="sm:hidden">Back</span>
         </Link>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

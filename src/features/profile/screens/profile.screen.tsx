@@ -182,23 +182,23 @@ export default function ProfileScreen() {
   console.log("Original values:", originalValues);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Profile Header */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl shadow-lg p-8 mb-6 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+        <div className="bg-linear-to-r from-green-600 to-green-700 rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mb-6 text-white">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shrink-0">
                 <FontAwesomeIcon
                   icon={faUser}
-                  className="text-4xl text-green-600"
+                  className="text-3xl sm:text-4xl text-green-600"
                 />
               </div>
-              <div>
-                <h1 className="text-3xl font-bold">
+              <div className="flex-1 sm:flex-none">
+                <h1 className="text-2xl sm:text-3xl font-bold wrap-break-word">
                   {userInfo?.name || "User Profile"}
                 </h1>
-                <p className="text-green-100 text-sm mt-1">
+                <p className="text-green-100 text-xs sm:text-sm mt-1">
                   Manage your account information
                 </p>
               </div>
@@ -206,7 +206,7 @@ export default function ProfileScreen() {
             {!isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="bg-white text-green-600 px-6 py-2.5 rounded-lg font-semibold hover:bg-green-50 transition-colors flex items-center gap-2"
+                className="bg-white text-green-600 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-semibold hover:bg-green-50 transition-colors flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
               >
                 <FontAwesomeIcon icon={faEdit} />
                 Edit Profile
@@ -216,8 +216,8 @@ export default function ProfileScreen() {
         </div>
 
         {/* Profile Form */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             <FontAwesomeIcon icon={faUser} className="text-green-600" />
             Personal Information
           </h2>
@@ -318,11 +318,11 @@ export default function ProfileScreen() {
 
             {/* Action Buttons */}
             {isEditing && (
-              <div className="flex gap-4 pt-4 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-gray-200">
                 <button
                   type="submit"
                   disabled={isSubmitting || !isDirty}
-                  className="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 bg-green-600 text-white py-3 px-4 sm:px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   {isSubmitting ? (
                     <>
@@ -343,7 +343,7 @@ export default function ProfileScreen() {
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={isSubmitting}
-                  className="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 bg-gray-200 text-gray-700 py-3 px-4 sm:px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   <FontAwesomeIcon icon={faTimes} />
                   Cancel
@@ -354,8 +354,8 @@ export default function ProfileScreen() {
 
           {/* Account Status Info */}
           {!isEditing && (
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="flex items-center justify-center gap-8 text-sm text-gray-600">
+            <div className="mt-6 sm:mt-8 pt-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-gray-600">
                 <div className="flex items-center gap-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}

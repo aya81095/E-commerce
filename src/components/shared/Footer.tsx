@@ -9,8 +9,11 @@ import {
 import freshCartLogo from "../../assets/images/freshcart-logo.svg";
 import minilogo from "../../assets/images/mini-logo.png";
 import Image from "next/image";
+import { getAllCategories } from "../../features/categories/server/categories.actions";
 
-export default function Footer() {
+export default async function Footer() {
+  const categoriesData = await getAllCategories();
+  const categories = categoriesData?.data?.slice(0, 5) || [];
   return (
    <footer className="w-full mx-auto bg-white border-t border-gray-200 font-sans ">
        {/* Main Footer Content */}
@@ -62,46 +65,26 @@ export default function Footer() {
                 Categories
               </h3>
               <ul className="space-y-2.5">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
-                  >
-                    Fruits & Vegetables
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
-                  >
-                    Dairy & Eggs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
-                  >
-                    Bakery & Snacks
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
-                  >
-                    Meat & Seafood
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
-                  >
-                    Beverages
-                  </Link>
-                </li>
+                {categories.map((category) => (
+                  <li key={category._id}>
+                    <Link
+                      href={`/categories/${category._id}`}
+                      className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
+                {categories.length > 0 && (
+                  <li>
+                    <Link
+                      href="/categories"
+                      className="text-green-600 hover:text-green-700 font-medium transition-colors text-sm"
+                    >
+                      View All →
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
 
@@ -113,7 +96,7 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 <li>
                   <Link
-                    href="#"
+                    href="/about"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     About Us
@@ -121,7 +104,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/contact"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     Contact Us
@@ -129,7 +112,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/privacy-policy"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     Privacy Policy
@@ -137,7 +120,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/terms"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     Terms of Service
@@ -145,10 +128,10 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/brands"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
-                    Shipping Policy
+                    Our Brands
                   </Link>
                 </li>
               </ul>
@@ -162,7 +145,7 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 <li>
                   <Link
-                    href="#"
+                    href="/profile"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     My Account
@@ -170,7 +153,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/orders"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     Order History
@@ -178,7 +161,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/wishlist"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     Wishlist
@@ -186,15 +169,15 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/cart"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
-                    Returns & Refunds
+                    Shopping Cart
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/contact"
                     className="text-gray-600 hover:text-[#0aad0a] transition-colors text-sm"
                   >
                     Help Center
@@ -211,7 +194,7 @@ export default function Footer() {
         <div className="container mx-auto px-4">
           <div className="flex flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm text-center md:text-left">
-              © 2023 FreshCart. All rights reserved.
+              © 2026 FreshCart. All rights reserved.
             </p>
            <Image src={minilogo} alt="FreshCart Logo" width={25} height={25} />
           </div>

@@ -124,8 +124,8 @@ export default function OrderCard({ orderInfo }: { orderInfo: Order }) {
 
         <div className="flex items-center gap-6">
           <div className="text-right">
-            <p className="text-gray-400 text-sm">Total</p>
-            <h2 className="text-xl font-bold text-green-600">
+            <p className="text-gray-400 text-xs md:text-sm">Total</p>
+            <h2 className="text-lg md:text-xl font-bold text-green-600">
               {orderInfo.totalOrderPrice >= 500
                 ? `${orderInfo.totalOrderPrice} EGP`
                 : `${orderInfo.totalOrderPrice + 100} EGP`}

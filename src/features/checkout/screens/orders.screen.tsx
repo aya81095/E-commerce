@@ -33,24 +33,30 @@ export default function OrdersScreen() {
     <div className="w-full min-h-screen bg-gray-50 p-8 flex justify-center">
       <div className="w-full">
         {/* Page Title */}
-        <div className="flex items-center gap-3 mb-6 justify-between">
-          <div className="flex flex-row gap-4">
-            <div className="bg-green-600 p-3 rounded-xl">
-              <FontAwesomeIcon icon={faBox} className="text-white text-xl" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6 justify-between">
+          <div className="flex flex-row gap-3 md:gap-4">
+            <div className="bg-green-600 p-2 md:p-3 rounded-lg md:rounded-xl shrink-0">
+              <FontAwesomeIcon
+                icon={faBox}
+                className="text-white text-lg md:text-xl"
+              />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">My Orders</h1>
-              <p className="text-gray-500 text-sm">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">
+                My Orders
+              </h1>
+              <p className="text-gray-500 text-xs md:text-sm">
                 Track and manage your orders
               </p>
             </div>
           </div>
           <Link
             href="/"
-            className="text-green-600 flex justify-center items-center gap-1 hover:gap-2 transition-all "
+            className="text-green-600 flex justify-center items-center gap-1 hover:gap-2 transition-all text-sm md:text-base whitespace-nowrap"
           >
             <FontAwesomeIcon icon={faArrowLeftLong} />
-            <span>Continue Shopping</span>
+            <span className="hidden sm:inline">Continue Shopping</span>
+            <span className="sm:hidden">Shop</span>
           </Link>
         </div>
 
@@ -61,7 +67,7 @@ export default function OrdersScreen() {
               icon={faBox}
               className="text-gray-300 text-6xl mb-4"
             />
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-2">
               No Orders Yet
             </h2>
             <p className="text-gray-500">

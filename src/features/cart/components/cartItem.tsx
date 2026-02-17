@@ -1,22 +1,30 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faSpinner, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMinus,
+  faPlus,
+  faSpinner,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { CartItem as CartItemType } from "../types/cart.types";
 import Swal from "sweetalert2";
-import { removeProductFromCart, updateProductQuantity } from "../server/cart.actions";
+import {
+  removeProductFromCart,
+  updateProductQuantity,
+} from "../server/cart.actions";
 import { removeProduct, setCartInfo } from "../store/cart.slice";
 import { useAppDispatch } from "@/src/store/store";
-import {useState} from "react"
+import { useState } from "react";
 
-export default function CartItem({info}: {info: CartItemType}) {
-    const {_id,product,count,price}=info
-    const {title,imageCover,category,id,quantity}=product
-    const dispatch=useAppDispatch()
-    const [loadingType,setLoadingType]=useState<'inc' | 'dec' | null>(null)
+export default function CartItem({ info }: { info: CartItemType }) {
+  const { _id, product, count, price } = info;
+  const { title, imageCover, category, id, quantity } = product;
+  const dispatch = useAppDispatch();
+  const [loadingType, setLoadingType] = useState<"inc" | "dec" | null>(null);
 
-    const handleDeleteProduct=async()=>{
-const result = await Swal.fire({
-  html: `
+  const handleDeleteProduct = async () => {
+    const result = await Swal.fire({
+      html: `
     <div class="text-center">
       <div class="w-14 h-14 mx-auto bg-red-100 text-red-500 rounded-full flex items-center justify-center">
         
@@ -34,7 +42,7 @@ const result = await Swal.fire({
       </div>
 
       <h2 class="text-xl font-semibold mt-4">
-         Remove <span class="font-bold text-gray-900" >${title.slice(0,40)}${title.length>40 ? "..." : ""}</span> from cart?
+         Remove <span class="font-bold text-gray-900" >${title.slice(0, 40)}${title.length > 40 ? "..." : ""}</span> from cart?
       </h2>
 
       <p class="text-gray-500 text-sm mt-2">
@@ -42,105 +50,125 @@ const result = await Swal.fire({
       </p>
     </div>
   `,
-  showCancelButton: true,
-  confirmButtonText: "Delete",
-  cancelButtonText: "Cancel",
-  buttonsStyling: false,
-  customClass: {
-    popup: "rounded-2xl shadow-lg p-0 border-0",
-    htmlContainer: "p-6 m-0 rounded-2xl",
-    actions: "px-6 pb-6 pt-0 gap-3",
-    confirmButton: "bg-red-500 text-white px-6 py-2 rounded-lg cursor-pointer",
-    cancelButton: "bg-gray-200 text-gray-800 px-6 py-2 rounded-lg cursor-pointer",
-  }
-});
-    if(result.isConfirmed){
-      dispatch(removeProduct({id}))
-      await removeProductFromCart({ productId: id }) 
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      buttonsStyling: false,
+      customClass: {
+        popup: "rounded-2xl shadow-lg p-0 border-0",
+        htmlContainer: "p-6 m-0 rounded-2xl",
+        actions: "px-6 pb-6 pt-0 gap-3",
+        confirmButton:
+          "bg-red-500 text-white px-6 py-2 rounded-lg cursor-pointer",
+        cancelButton:
+          "bg-gray-200 text-gray-800 px-6 py-2 rounded-lg cursor-pointer",
+      },
+    });
+    if (result.isConfirmed) {
+      dispatch(removeProduct({ id }));
+      await removeProductFromCart({ productId: id });
     }
+  };
+
+  const handleUpdateQuantity = async (
+    newCount: number,
+    type: "inc" | "dec",
+  ) => {
+    if (newCount < 1) return;
+    setLoadingType(type);
+    try {
+      const response = await updateProductQuantity({
+        productId: id,
+        count: newCount,
+      });
+      dispatch(setCartInfo(response));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingType(null);
     }
+  };
+  return (
+    <>
+      {/* Product Card */}
+      <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 shadow-sm">
+        {/* Image */}
+        <div className="w-full sm:w-32 md:w-36 h-32 sm:h-auto bg-gray-100 rounded-xl flex items-center justify-center shrink-0">
+          <Image
+            src={imageCover}
+            alt={title}
+            width={130}
+            height={130}
+            className="object-cover"
+          />
+        </div>
 
-    const handleUpdateQuantity=async(newCount:number,type:'inc' | 'dec')=>{
-      if (newCount<1) return;
-      setLoadingType(type)
-      try{
-      const response = await updateProductQuantity({productId:id,count:newCount})
-      dispatch(setCartInfo(response))
-      }catch(error){
-        console.log(error);
-        
-      }
-      finally{
-        setLoadingType(null)
-      }
-    }
-    return (<>
-        {/* Product Card */}  
-        <div className="bg-white rounded-2xl p-6 flex gap-6 shadow-sm">
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <h2 className="font-semibold text-base sm:text-lg line-clamp-2">
+            {title}
+          </h2>
 
-              {/* Image */}
-              <div className="w-36 h-auto bg-gray-100 rounded-xl flex items-center justify-center">
-                <Image
-                  src={imageCover}
-                  alt={title}
-                  width={130}
-                  height={130}
-                  className="object-cover"
-                />
-              </div>
+          <div className="flex flex-wrap items-center gap-2 mt-2">
+            <span className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full">
+              {category.name}
+            </span>
+            <span className="text-xs text-gray-500">
+              • SKU {_id.slice(-6).toUpperCase()}
+            </span>
+          </div>
 
-              {/* Info */}
-              <div className="flex-1">
-                <h2 className="font-semibold text-lg">
-                  {title}
-                </h2>
+          <p className="text-green-600 font-bold text-lg sm:text-xl mt-3">
+            {price} EGP
+          </p>
 
-                <span className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full inline-block mt-2">
-                  {category.name} 
-                </span>
-                <span className="text-xs text-gray-500">
-                 {" "} • SKU {_id.slice(-6).toUpperCase()}
-                </span>
-
-                <p className="text-green-600 font-bold text-xl mt-3">
-                  {price} EGP
-                </p>
-
-                {/* Quantity */}
-                <div className="flex items-center justify-between gap-4 mt-4 ">
-                  <div className="flex items-center border border-gray-200 bg-gray-50 rounded-lg p-1">
-                    <button disabled={count<=1 || loadingType!== null} className="px-2 py-1.5 bg-white rounded-lg shadow-sm text-red-500 text-sm hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed" onClick={()=>handleUpdateQuantity(count-1,'dec')}>
-                      {loadingType==='dec' ? (
-                        <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-                      ) : (
-                        <FontAwesomeIcon icon={faMinus} />
-                      )}
-                    </button>
-                    <span className="px-4 text-lg">{count}</span>
-                    <button disabled={count >= quantity || loadingType!== null} className="px-2 py-1.5 bg-green-600 text-white rounded-lg shadow-sm text-sm hover:bg-green-700 cursor-pointer disabled:cursor-not-allowed" onClick={()=>handleUpdateQuantity(count+1,'inc')}>
-                      {loadingType==='inc' ? (
-                        <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-                      ) : (
-                        <FontAwesomeIcon icon={faPlus} />
-                      )}
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                  {/* Total */}
-                  <div className="text-right">
-                    <p className="text-sm text-gray-400">Total</p>
-                    <p className="font-bold text-xl">{price*count} {" "} <span className="text-gray-400 text-sm font-normal">EGP</span></p>
-                  </div>
-                  <button className="text-red-500" onClick={handleDeleteProduct}>
-                    <FontAwesomeIcon icon={faTrash} className="bg-red-50 p-2.5 text-lg rounded-xl border border-red-300 cursor-pointer"/>
-                  </button>
-                  </div>
-                </div>
-              </div>
-
-
+          {/* Quantity */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mt-4">
+            <div className="flex items-center border border-gray-200 bg-gray-50 rounded-lg p-1">
+              <button
+                disabled={count <= 1 || loadingType !== null}
+                className="px-2 py-1.5 bg-white rounded-lg shadow-sm text-red-500 text-sm hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed"
+                onClick={() => handleUpdateQuantity(count - 1, "dec")}
+              >
+                {loadingType === "dec" ? (
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                ) : (
+                  <FontAwesomeIcon icon={faMinus} />
+                )}
+              </button>
+              <span className="px-3 sm:px-4 text-base sm:text-lg">{count}</span>
+              <button
+                disabled={count >= quantity || loadingType !== null}
+                className="px-2 py-1.5 bg-green-600 text-white rounded-lg shadow-sm text-sm hover:bg-green-700 cursor-pointer disabled:cursor-not-allowed"
+                onClick={() => handleUpdateQuantity(count + 1, "inc")}
+              >
+                {loadingType === "inc" ? (
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                ) : (
+                  <FontAwesomeIcon icon={faPlus} />
+                )}
+              </button>
             </div>
-        </>
-    )
+
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
+              {/* Total */}
+              <div className="text-left sm:text-right">
+                <p className="text-xs sm:text-sm text-gray-400">Total</p>
+                <p className="font-bold text-lg sm:text-xl">
+                  {price * count}{" "}
+                  <span className="text-gray-400 text-sm font-normal">EGP</span>
+                </p>
+              </div>
+              <button className="text-red-500" onClick={handleDeleteProduct}>
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  className="bg-red-50 p-2 sm:p-2.5 text-base sm:text-lg rounded-xl border border-red-300 cursor-pointer"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

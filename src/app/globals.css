@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Font Variable */
+@theme {
+  --font-family-sans: var(--font-exo), system-ui, -apple-system, sans-serif;
+}
+
 /* Swiper Styles */
 @import "swiper/css";
 @import "swiper/css/pagination";
