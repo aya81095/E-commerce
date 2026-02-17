@@ -24,7 +24,15 @@ const exo = Exo_2({
 });
 
 export const metadata = {
+  title: "FreshCart",
+  description:
+    "Shop fresh groceries, organic products, and daily essentials online. Fast delivery, quality guaranteed, and best prices on fruits, vegetables, and more.",
   viewport: "width=device-width, initial-scale=1",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 let defaultCartState: CartState = {
