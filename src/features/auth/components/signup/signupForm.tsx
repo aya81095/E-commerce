@@ -1,7 +1,12 @@
-"use client"
+"use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { faEye, faEyeSlash, faSpinner, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faSpinner,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,60 +16,65 @@ import { signupAction } from "../../server/signup.actions";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-
 export default function SignupForm() {
-
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showRePassword, setShowRePassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  }
+  };
 
+  const toggleRePasswordVisibility = () => {
+    setShowRePassword(!showRePassword);
+  };
 
-  const {register, handleSubmit, formState: {errors, isSubmitting,isDirty }, setError} = useForm<signupFormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isDirty },
+    setError,
+  } = useForm<signupFormValues>({
     defaultValues: {
       name: "",
       email: "",
       password: "",
       rePassword: "",
       phone: "",
-      terms: false
-}
-,
-resolver: zodResolver(signupSchema),
-mode: "onSubmit",
-reValidateMode: "onChange",
-    
-  })
+      terms: false,
+    },
+    resolver: zodResolver(signupSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
 
   const onSubmit: SubmitHandler<signupFormValues> = async (values) => {
     try {
-    const response = await signupAction(values);
-    if(response?.success){
-      toast.success("Account Created Successfully");
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
-      console.log(response);
-    }else{     
-      if(response?.errors){
-        console.log(response.errors);
-        
-        Object.keys(response.errors).forEach((key) => {
-          setError(key as keyof signupFormValues, {
-            message: response.errors[key]
-          });
-        });
+      const response = await signupAction(values);
+      if (response?.success) {
+        toast.success("Account Created Successfully");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
         console.log(response);
+      } else {
+        if (response?.errors) {
+          console.log(response.errors);
+
+          Object.keys(response.errors).forEach((key) => {
+            setError(key as keyof signupFormValues, {
+              message: response.errors[key],
+            });
+          });
+          console.log(response);
+        }
       }
-    }
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
     }
-  }
+  };
 
   return (
     <div className="bg-gray-50 flex items-center justify-center lg:justify-start lg:pl-10 p-6 lg:p-8">
@@ -103,23 +113,33 @@ reValidateMode: "onChange",
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Name */}
-            <div className="mb-3">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="name"
-                placeholder="John Doe"
-                className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                {...register("name")}
-              />
-              {errors.name && <p className="text-red-500 text-xs mt-1">*{errors.name.message}</p>}
-            </div>
+          <div className="mb-3">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1.5"
+            >
+              Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              placeholder="John Doe"
+              className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              {...register("name")}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.name.message}
+              </p>
+            )}
+          </div>
 
           {/* Email */}
           <div className="mb-3">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1.5"
+            >
               Email Address <span className="text-red-500">*</span>
             </label>
             <input
@@ -129,12 +149,19 @@ reValidateMode: "onChange",
               className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               {...register("email")}
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">*{errors.email.message}</p>}
-            </div>
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.email.message}
+              </p>
+            )}
+          </div>
 
           {/* Phone */}
           <div className="mb-3">
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-700 mb-1.5"
+            >
               Phone Number <span className="text-red-500">*</span>
             </label>
             <input
@@ -144,12 +171,19 @@ reValidateMode: "onChange",
               className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               {...register("phone")}
             />
-            {errors.phone && <p className="text-red-500 text-xs mt-1">*{errors.phone.message}</p>}
+            {errors.phone && (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.phone.message}
+              </p>
+            )}
           </div>
 
           {/* Password */}
           <div className="mb-3">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1.5"
+            >
               Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -160,33 +194,47 @@ reValidateMode: "onChange",
                 className="w-full px-3 py-2.5 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 {...register("password")}
               />
-                <button
+              <button
                 type="button"
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm"
               >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="text-sm cursor-pointer" onClick={togglePasswordVisibility}/>
+                <FontAwesomeIcon
+                  icon={showPassword ? faEyeSlash : faEye}
+                  className="text-sm cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                />
               </button>
             </div>
 
             {/* password strength indicator */}
-            <div className="password-strength flex items-center gap-2">
+            {/* <div className="password-strength flex items-center gap-2">
                 <div className="bar w-full h-1 bg-gray-200 rounded-full ">
                 <div className="progress w-1/4 h-full bg-red-500 rounded-full"></div>
             </div>
             <span className="text-sm text-gray-500">Week</span>
-            </div>
-             {errors.password ? (<p className="text-red-500 text-xs mt-1">*{errors.password.message}</p>) : (<p className="text-xs text-gray-500">*Must be at least 8 characters with numbers and symbols</p>)}
+            </div> */}
+            {errors.password ? (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.password.message}
+              </p>
+            ) : (
+              <p className="text-xs text-gray-500">
+                *Must be at least 8 characters with numbers and symbols
+              </p>
+            )}
           </div>
-
 
           {/* Confirm Password */}
           <div className="mb-4">
-            <label htmlFor="rePassword" className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label
+              htmlFor="rePassword"
+              className="block text-sm font-medium text-gray-700 mb-1.5"
+            >
               Confirm Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
-                type={showPassword ? "text" : "password"}
+                type={showRePassword ? "text" : "password"}
                 id="rePassword"
                 placeholder="Confirm your password"
                 className="w-full px-3 py-2.5 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -196,10 +244,18 @@ reValidateMode: "onChange",
                 type="button"
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-sm"
               >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="text-sm cursor-pointer" onClick={togglePasswordVisibility}/>
+                <FontAwesomeIcon
+                  icon={showRePassword ? faEyeSlash : faEye}
+                  className="text-sm cursor-pointer"
+                  onClick={toggleRePasswordVisibility}
+                />
               </button>
             </div>
-            {errors.rePassword && <p className="text-red-500 text-xs mt-1">*{errors.rePassword.message}</p>}
+            {errors.rePassword && (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.rePassword.message}
+              </p>
+            )}
           </div>
 
           {/* Checkboxes */}
@@ -211,18 +267,25 @@ reValidateMode: "onChange",
                 {...register("terms")}
               />
               <span className="text-sm text-gray-600">
-                I agree to the{' '}
+                I agree to the{" "}
                 <Link href="/terms" className="text-green-600 hover:underline">
                   Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link href="/privacy-policy" className="text-green-600 hover:underline">
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy-policy"
+                  className="text-green-600 hover:underline"
+                >
                   Privacy Policy
-                </Link>{' '}
+                </Link>{" "}
                 <span className="text-red-500">*</span>
               </span>
             </label>
-            {errors.terms && <p className="text-red-500 text-xs mt-1">*{errors.terms.message}</p>}
+            {errors.terms && (
+              <p className="text-red-500 text-xs mt-1">
+                *{errors.terms.message}
+              </p>
+            )}
           </div>
 
           {/* Submit Button */}
@@ -231,19 +294,28 @@ reValidateMode: "onChange",
             disabled={isSubmitting || !isDirty}
             className="w-full bg-green-600 text-white py-2.5 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? <FontAwesomeIcon icon={faSpinner} className="animate-spin" /> : <FontAwesomeIcon icon={faUserPlus} />}
-            <span>{isSubmitting ? "Creating Account..." : "Create My Account"}</span>
+            {isSubmitting ? (
+              <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+            ) : (
+              <FontAwesomeIcon icon={faUserPlus} />
+            )}
+            <span>
+              {isSubmitting ? "Creating Account..." : "Create My Account"}
+            </span>
           </button>
         </form>
 
         {/* Sign In Link */}
         <p className="text-center text-gray-600 mt-4 text-sm">
-          Already have an account?{' '}
-          <Link href="/login" className="text-green-600 font-semibold hover:underline">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-green-600 font-semibold hover:underline"
+          >
             Sign In
           </Link>
         </p>
       </div>
     </div>
   );
-};
+}

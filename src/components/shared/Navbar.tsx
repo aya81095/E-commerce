@@ -304,6 +304,20 @@ export default function Navbar() {
       fetchCategories();
     }
   };
+
+  // Handle mobile menu animation
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <header className="w-full font-sans sticky top-0 z-50">
       {/* STICKY SECTION STARTS HERE */}
@@ -528,7 +542,7 @@ export default function Navbar() {
 
               {/* Mobile Menu Button */}
               <button
-                className="lg:hidden text-2xl text-white px-2 py-[3px] bg-green-600 hover:bg-green-700 rounded-xl"
+                className="lg:hidden text-2xl text-white px-2 py-[3px] bg-green-600 hover:bg-green-700 rounded-xl cursor-pointer transition-colors"
                 onClick={() => setIsMobileMenuOpen(true)}
               >
                 <FontAwesomeIcon icon={faBars} />
@@ -710,270 +724,273 @@ export default function Navbar() {
       {/* STICKY SECTION ENDS HERE */}
 
       {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden font-sans">
-          <div
-            className={`fixed inset-0 bg-black/50 transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-100" : "opacity-0"}`}
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          <nav
-            className={`fixed top-0 right-0 bottom-0 w-[75%] bg-white z-50 overflow-y-auto shadow-xl transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
-          >
-            <div className="p-4">
-              <div className="flex justify-between items-center mb-6">
-                <Image src={freshCartLogo} alt="FreshCart Logo" />
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="bg-gray-100 w-8 h-8 rounded-full text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                >
-                  <FontAwesomeIcon icon={faTimes} className="text-sm" />
-                </button>
-              </div>
+      <div
+        className={`fixed inset-0 z-50 lg:hidden font-sans transition-all duration-500 ${isMobileMenuOpen ? "visible" : "invisible pointer-events-none"}`}
+      >
+        <div
+          className={`fixed inset-0 bg-black/50 transition-opacity duration-500 ease-out ${isMobileMenuOpen ? "opacity-100" : "opacity-0"}`}
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+        <nav
+          className={`fixed top-0 right-0 bottom-0 w-[75%] bg-white z-50 overflow-y-auto shadow-xl transition-transform duration-500 ease-out ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+        >
+          <div className="p-4">
+            <div className="flex justify-between items-center mb-6">
+              <Image src={freshCartLogo} alt="FreshCart Logo" />
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="bg-gray-100 w-8 h-8 rounded-full text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <FontAwesomeIcon icon={faTimes} className="text-sm" />
+              </button>
+            </div>
 
-              <div className="relative mb-6 md:hidden" ref={mobileSearchRef}>
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={mobileSearchQuery}
-                  onChange={handleMobileSearchChange}
-                  onKeyDown={handleMobileKeyDown}
-                  onFocus={() =>
-                    mobileSearchQuery && setShowMobileResults(true)
-                  }
-                  className="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0aad0a] text-sm"
-                />
-                <button
-                  onClick={() =>
-                    mobileSearchQuery && performMobileSearch(mobileSearchQuery)
-                  }
-                  className="absolute right-0 top-0 h-full w-10 text-white bg-[#0aad0a] rounded-r-lg flex items-center justify-center"
-                >
-                  {isMobileSearching ? (
-                    <FontAwesomeIcon
-                      icon={faSpinner}
-                      className="animate-spin"
-                    />
-                  ) : (
-                    <FontAwesomeIcon icon={faSearch} />
-                  )}
-                </button>
-
-                {/* Mobile Search Results Dropdown */}
-                {showMobileResults && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
-                    {isMobileSearching ? (
-                      <div className="p-6 text-center text-gray-500">
-                        <FontAwesomeIcon
-                          icon={faSpinner}
-                          className="animate-spin text-xl mb-2"
-                        />
-                        <p className="text-sm">Searching...</p>
-                      </div>
-                    ) : mobileSearchResults.length > 0 ? (
-                      <div className="py-2">
-                        {mobileSearchResults.map((product, index) => (
-                          <Link
-                            key={product._id}
-                            href={`/products/${product._id}`}
-                            onClick={() => {
-                              setShowMobileResults(false);
-                              setMobileSearchQuery("");
-                              setIsMobileMenuOpen(false);
-                            }}
-                            className={`flex items-center gap-3 px-3 py-2 hover:bg-gray-50 transition-colors ${
-                              index === mobileSelectedIndex ? "bg-gray-100" : ""
-                            }`}
-                          >
-                            <div className="relative w-10 h-10 shrink-0">
-                              <Image
-                                src={product.imageCover}
-                                alt={product.title}
-                                fill
-                                className="object-cover rounded"
-                                sizes="40px"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-xs font-medium text-gray-900 truncate">
-                                {product.title}
-                              </h4>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-xs font-bold text-green-600">
-                                  ${product.priceAfterDiscount || product.price}
-                                </span>
-                                {product.priceAfterDiscount && (
-                                  <span className="text-[10px] text-gray-400 line-through">
-                                    ${product.price}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    ) : mobileSearchQuery ? (
-                      <div className="p-6 text-center text-gray-500">
-                        <p className="text-sm mb-1">No products found</p>
-                        <p className="text-xs">Try different keywords</p>
-                      </div>
-                    ) : null}
-                  </div>
+            <div className="relative mb-6 md:hidden" ref={mobileSearchRef}>
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={mobileSearchQuery}
+                onChange={handleMobileSearchChange}
+                onKeyDown={handleMobileKeyDown}
+                onFocus={() => mobileSearchQuery && setShowMobileResults(true)}
+                className="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0aad0a] text-sm"
+              />
+              <button
+                onClick={() =>
+                  mobileSearchQuery && performMobileSearch(mobileSearchQuery)
+                }
+                className="absolute right-0 top-0 h-full w-10 text-white bg-[#0aad0a] rounded-r-lg flex items-center justify-center"
+              >
+                {isMobileSearching ? (
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                ) : (
+                  <FontAwesomeIcon icon={faSearch} />
                 )}
-              </div>
+              </button>
 
-              <div className="space-y-6 mb-8 md:border-t md:border-gray-100 md:py-4">
-                <Link
-                  href="/wishlist"
-                  className="flex items-center gap-3 text-gray-600 hover:text-[#0aad0a] transition-colors"
-                >
-                  <div className="relative w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-500">
-                    <FontAwesomeIcon icon={faHeart} className="text-md" />
-                    {count > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                        {count}
-                      </span>
-                    )}
-                  </div>
-                  Wishlist
-                </Link>
-                <Link
-                  href="/cart"
-                  className="flex items-center gap-3 text-gray-600 hover:text-[#0aad0a] transition-colors"
-                >
-                  <div className=" relative w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-[#0aad0a]">
-                    <FontAwesomeIcon
-                      icon={faShoppingCart}
-                      className="text-md"
-                    />
-                    {numOfCartItems > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-[#0aad0a] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                        {numOfCartItems}
-                      </span>
-                    )}
-                  </div>
-                  Cart
-                </Link>
-                <Link
-                  href="/profile"
-                  className="flex items-center gap-3 text-gray-600 hover:text-[#0aad0a] transition-colors"
-                >
-                  <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-[#0aad0a]">
-                    <FontAwesomeIcon icon={faUser} className="text-md" />
-                  </div>
-                  Account
-                </Link>
-              </div>
-
-              <div className="border-t border-gray-100 py-4 space-y-4 ">
-                <Link
-                  href="/"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/products"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Shop
-                </Link>
-                <Link
-                  href="/categories"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Categories
-                </Link>
-                <Link
-                  href="/brands"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Brands
-                </Link>
-                <Link
-                  href="/orders"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Track Order
-                </Link>
-                <Link
-                  href="/about"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  About
-                </Link>
-                <Link
-                  href="/contact"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Contact
-                </Link>
-                <Link
-                  href="/privacy-policy"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Privacy Policy
-                </Link>
-                <Link
-                  href="/terms"
-                  className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Terms of Service
-                </Link>
-              </div>
-
-              {isAuthenticated ? (
-                <div className="mt-4 w-full mx-auto">
-                  <button
-                    className="flex-1 bg-red-700 text-white py-2 w-full rounded-lg font-medium hover:bg-red-800 transition-colors"
-                    onClick={Logout}
-                  >
-                    Log Out
-                  </button>
-                </div>
-              ) : (
-                <div className="mt-4 flex gap-3 flex-col md:flex-row">
-                  <Link
-                    href="/login"
-                    className="w-full md:w-auto flex-1 bg-[#0aad0a] text-white py-2 rounded-lg font-medium hover:bg-green-700 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="w-full md:w-auto flex-1 border border-[#0aad0a] text-[#0aad0a] py-2 rounded-lg font-medium hover:bg-green-50 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
+              {/* Mobile Search Results Dropdown */}
+              {showMobileResults && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
+                  {isMobileSearching ? (
+                    <div className="p-6 text-center text-gray-500">
+                      <FontAwesomeIcon
+                        icon={faSpinner}
+                        className="animate-spin text-xl mb-2"
+                      />
+                      <p className="text-sm">Searching...</p>
+                    </div>
+                  ) : mobileSearchResults.length > 0 ? (
+                    <div className="py-2">
+                      {mobileSearchResults.map((product, index) => (
+                        <Link
+                          key={product._id}
+                          href={`/products/${product._id}`}
+                          onClick={() => {
+                            setShowMobileResults(false);
+                            setMobileSearchQuery("");
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className={`flex items-center gap-3 px-3 py-2 hover:bg-gray-50 transition-colors ${
+                            index === mobileSelectedIndex ? "bg-gray-100" : ""
+                          }`}
+                        >
+                          <div className="relative w-10 h-10 shrink-0">
+                            <Image
+                              src={product.imageCover}
+                              alt={product.title}
+                              fill
+                              className="object-cover rounded"
+                              sizes="40px"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-xs font-medium text-gray-900 truncate">
+                              {product.title}
+                            </h4>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-xs font-bold text-green-600">
+                                ${product.priceAfterDiscount || product.price}
+                              </span>
+                              {product.priceAfterDiscount && (
+                                <span className="text-[10px] text-gray-400 line-through">
+                                  ${product.price}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : mobileSearchQuery ? (
+                    <div className="p-6 text-center text-gray-500">
+                      <p className="text-sm mb-1">No products found</p>
+                      <p className="text-xs">Try different keywords</p>
+                    </div>
+                  ) : null}
                 </div>
               )}
-
-              <div className="mt-8 bg-gray-50 p-4 rounded-lg flex items-center gap-4">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#0aad0a] shadow-sm shrink-0">
-                  <FontAwesomeIcon icon={faHeadset} />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-gray-900">
-                    Need Help?
-                  </div>
-                  <div className="text-sm text-[#0aad0a] cursor-pointer hover:underline font-medium">
-                    Contact Support
-                  </div>
-                </div>
-              </div>
             </div>
-          </nav>
-        </div>
-      )}
+
+            <div className="space-y-6 mb-8 md:border-t md:border-gray-100 md:py-4">
+              <Link
+                href="/wishlist"
+                className="flex items-center gap-3 text-gray-600 hover:text-[#0aad0a] transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="relative w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-500">
+                  <FontAwesomeIcon icon={faHeart} className="text-md" />
+                  {count > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                      {count}
+                    </span>
+                  )}
+                </div>
+                Wishlist
+              </Link>
+              <Link
+                href="/cart"
+                className="flex items-center gap-3 text-gray-600 hover:text-[#0aad0a] transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className=" relative w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-[#0aad0a]">
+                  <FontAwesomeIcon icon={faShoppingCart} className="text-md" />
+                  {numOfCartItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-[#0aad0a] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                      {numOfCartItems}
+                    </span>
+                  )}
+                </div>
+                Cart
+              </Link>
+              <Link
+                href="/profile"
+                className="flex items-center gap-3 text-gray-600 hover:text-[#0aad0a] transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-[#0aad0a]">
+                  <FontAwesomeIcon icon={faUser} className="text-md" />
+                </div>
+                Account
+              </Link>
+            </div>
+
+            <div className="border-t border-gray-100 py-4 space-y-4 ">
+              <Link
+                href="/"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                href="/products"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Shop
+              </Link>
+              <Link
+                href="/categories"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Categories
+              </Link>
+              <Link
+                href="/brands"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Brands
+              </Link>
+              <Link
+                href="/orders"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Track Order
+              </Link>
+              <Link
+                href="/about"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base border-t border-gray-100 pt-4"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                href="/contact"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <Link
+                href="/privacy-policy"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/terms"
+                className="block text-gray-800 hover:text-[#0aad0a] font-medium transition-colors text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Terms of Service
+              </Link>
+            </div>
+
+            {isAuthenticated ? (
+              <div className="mt-4 w-full mx-auto">
+                <button
+                  className="flex-1 bg-red-700 text-white py-2 w-full rounded-lg font-medium hover:bg-red-800 transition-colors"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    Logout();
+                  }}
+                >
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4 flex gap-3 flex-col md:flex-row">
+                <Link
+                  href="/login"
+                  className="text-center w-full md:w-auto flex-1 bg-[#0aad0a] text-white py-2 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="text-center w-full md:w-auto flex-1 border border-[#0aad0a] text-[#0aad0a] py-2 rounded-lg font-medium hover:bg-green-50 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+
+            <div className="mt-8 bg-gray-50 p-4 rounded-lg flex items-center gap-4">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#0aad0a] shadow-sm shrink-0">
+                <FontAwesomeIcon icon={faHeadset} />
+              </div>
+              <Link
+                href="/contact"
+                className="flex-1"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="text-sm font-semibold text-gray-900">
+                  Need Help?
+                </div>
+                <div className="text-sm text-[#0aad0a] cursor-pointer hover:underline font-medium">
+                  Contact Support
+                </div>
+              </Link>
+            </div>
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }
